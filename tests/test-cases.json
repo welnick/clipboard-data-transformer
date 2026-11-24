@@ -1,0 +1,9 @@
+[
+  {"name":"quoted-csv-to-lines","input":"\"Apple\", \"Banana\"","source":"auto","target":"lines","expected":"Apple\nBanana"},
+  {"name":"simple-lines-to-sql","input":"00123\n00456","source":"auto","target":"sqltext","expected":"IN ('00123', '00456')"},
+  {"name":"sql-apostrophe","input":"'O''Brien', 'Smith'","source":"auto","target":"sqltext","expected":"IN ('O''Brien', 'Smith')"},
+  {"name":"sql-in-to-lines","input":"IN ('Apple', 'Banana')","source":"auto","target":"lines","expected":"Apple\nBanana"},
+  {"name":"tabbed-table-to-insert","input":"ID\tName\tState\n101\tAlice\tNY\n102\tBob\tNJ","source":"auto","target":"insert","headers":true,"table":"Employees","expected":"INSERT INTO [Employees] ([ID], [Name], [State])\nVALUES\n  ('101', 'Alice', 'NY'),\n  ('102', 'Bob', 'NJ');"},
+  {"name":"csv-embedded-comma","input":"Name,City\nAlice,\"New York, NY\"","source":"csv","target":"json","expected":"[\n  \"Name\",\n  \"City\",\n  \"Alice\",\n  \"New York, NY\"\n]"},
+  {"name":"json-to-csv","input":"[{\"Name\":\"Alice\",\"State\":\"NY\"}]","source":"auto","target":"csv","expected":"Name,State\r\nAlice,NY"}
+]

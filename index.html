@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Clipboard Data Transformer · Offline Utility</title>
+<style>
+:root{color-scheme:light;--bg:#f6f7f9;--card:#fff;--text:#182234;--muted:#647184;--border:#dce2e9;--blue:#254b99;--blue-h:#173d83;--blue-bg:#ecf2ff;--soft:#f8fafc;--warn:#93600c;--error:#a52730}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}button,select,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #a9bfed;outline-offset:2px}button[disabled]{opacity:.55;cursor:not-allowed}[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.shell{max-width:1220px;margin:0 auto;padding:30px 28px 45px}.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:14px}.mark{width:39px;height:39px;background:#243a62;border-radius:12px;display:grid;place-items:center;color:white;font-weight:750;font-size:18px;letter-spacing:-3px;padding-right:3px}.identity h1{font-size:21px;line-height:1.25;letter-spacing:-.5px;margin:0;font-weight:740}.identity p{font-size:12px;color:var(--muted);margin:3px 0 0}.top-actions{display:flex;gap:16px;align-items:center}.privacy-link{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}.privacy-link svg{width:14px;height:14px}.text-button{background:transparent;border:0;color:var(--blue);font-weight:650;padding:6px 0}.text-button:hover{text-decoration:underline}.help-btn{background:#fff;border:1px solid var(--border);border-radius:9px;padding:8px 13px;font-weight:650}.help-btn:hover{background:#f0f3f9}.intro{margin:0 0 20px}.intro h2{font-size:24px;letter-spacing:-.7px;margin:0 0 5px;font-weight:710}.intro p{margin:0;color:var(--muted);font-size:14px}.workflow{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px;margin-top:11px}.workflow span{padding:3px 8px;border:1px solid var(--border);background:#fff;border-radius:6px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.editor{border:1px solid var(--border);background:var(--card);border-radius:13px;overflow:hidden;min-width:0}.editor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 17px 12px}.editor-head h3{font-size:15px;margin:0;font-weight:720}.subtitle{font-size:12px;color:var(--muted);margin:0;padding:0 17px 11px}.area{width:calc(100% - 28px);margin:0 14px;display:block;min-height:245px;resize:vertical;background:#fcfdfe;border:1px solid #dce2e9;border-radius:9px;padding:15px;line-height:1.65;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:var(--text);tab-size:4}.area:focus{border-color:#7397d5}.output{background:#f9fbff}.editor-bottom{padding:11px 16px 15px}.meta{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:12px}.meta-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.source-picker{border:0;background:transparent;color:var(--blue);font-weight:630;font-size:12px;max-width:175px;cursor:pointer}.actions{display:flex;align-items:center;gap:8px}.btn{background:white;border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-weight:650}.btn:hover{background:#f2f5fa}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue-h)}.btn.small{font-size:12px;padding:5px 9px}.status{font-size:12px;color:var(--muted);min-height:18px;margin-top:8px}.status.error{color:var(--error)}.status.warn{color:var(--warn)}
+.lower{display:grid;grid-template-columns:minmax(0,1fr) 295px;gap:14px;margin-top:14px}.section{border:1px solid var(--border);background:var(--card);border-radius:13px;padding:20px}.section-top{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:16px}.section-top h3{font-size:16px;letter-spacing:-.2px;margin:0 0 3px}.section-top p{color:var(--muted);font-size:12px;margin:0}.selected-label{font-size:12px;color:var(--muted);white-space:nowrap}.selected-label strong{color:var(--blue);font-weight:700}.groups{display:grid;gap:18px}.group-title{color:#657287;text-transform:uppercase;letter-spacing:1.15px;font-size:10px;font-weight:750;margin-bottom:8px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.format{display:flex;flex-direction:column;gap:5px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:9px;padding:11px 12px;min-height:68px;min-width:0;color:var(--text)}.format:hover{background:var(--soft);border-color:#a5b9dd}.format[aria-pressed=true]{background:var(--blue-bg);border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}.format .name{font-size:12px;font-weight:700}.format .example{font:11px/1.45 ui-monospace,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+.side-content{display:grid;gap:17px}.aside-title{font-size:15px;font-weight:720;margin:0 0 4px}.aside-descr{font-size:12px;color:var(--muted);margin:0 0 11px}.control{display:flex;align-items:center;gap:9px;margin:10px 0;font-size:13px}.control input[type=checkbox]{width:16px;height:16px;accent-color:var(--blue);flex:0 0 auto}.control select,.control input[type=text]{margin-left:auto;min-width:0;max-width:150px;border:1px solid var(--border);border-radius:7px;padding:6px 7px;color:var(--text);background:white}.settings-divider{height:1px;background:var(--border);margin:17px 0}.hint{background:#f4f6fa;border:1px solid #e4e9f1;border-radius:9px;padding:12px;color:#48566b;font-size:12px}.hint p{margin:0 0 9px}.hint p:last-child{margin:0}.hint button{padding:0;border:0;background:transparent;color:var(--blue);font-weight:700;text-align:left}.message{display:none;padding:10px 12px;margin-top:12px;border-radius:8px;background:#fff7e8;color:#755014;font-size:12px}.message.show{display:block}.smallnote{font-size:11px;color:var(--muted);margin-top:8px}.fineprint{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:21px;padding:0 2px;color:var(--muted);font-size:12px}.fineprint p{margin:0}
+.dialog{border:1px solid var(--border);border-radius:15px;box-shadow:0 22px 80px #14233c38;max-width:720px;width:calc(100% - 28px);max-height:86vh;padding:0;color:var(--text)}.dialog::backdrop{background:rgba(17,28,49,.45)}.dialog-head{display:flex;align-items:start;justify-content:space-between;gap:15px;padding:22px 24px 16px;border-bottom:1px solid var(--border)}.dialog-head h2{margin:0;font-size:20px}.dialog-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.dialog-body{padding:18px 24px 26px;overflow:auto;max-height:65vh}.guide-step{margin-bottom:22px}.guide-step h3{margin:0 0 8px;font-size:15px}.guide-step p{margin:0 0 11px;color:#4f5d70}.guide-step pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f8fc;border:1px solid var(--border);border-radius:8px;padding:11px;font:12px/1.6 ui-monospace,Consolas,monospace}.example-buttons{display:flex;flex-wrap:wrap;gap:8px}.example-buttons button{background:#f0f4fd;border:1px solid #cdd8ee;padding:7px 11px;border-radius:8px;color:#254b99;font-weight:700}.tip{padding:13px;border-left:3px solid #7d97ca;background:#f3f6fc;color:#46546b;font-size:12px}
+@media(max-width:1050px){.lower{grid-template-columns:minmax(0,1fr) 270px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.shell{padding:20px 14px 35px}.workspace,.lower{grid-template-columns:1fr}.area{min-height:200px}.top{align-items:start}.privacy-link{display:none}.intro h2{font-size:21px}.side-content{grid-template-columns:1fr 1fr;gap:14px}}@media(max-width:510px){.top{flex-wrap:wrap}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.side-content{grid-template-columns:1fr}.selected-label{display:none}.workflow{flex-wrap:wrap}.dialog-body{padding:16px}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="top"><div class="brand"><div class="mark" aria-hidden="true">&lt;/&gt;</div><div class="identity"><h1>Clipboard Data Transformer</h1><p>A small utility for everyday data work</p></div></div><div class="top-actions"><span class="privacy-link" title="The application makes no network requests">◆ Local processing · no uploads</span><button class="help-btn" type="button" id="help-open">? &nbsp;How to use</button></div></header>
+<section class="intro"><h2>Get your data into shape.</h2><p>Paste a list or table, pick an output format, and copy the result. No setup or sign-in.</p><div class="workflow"><span>1 &nbsp; Paste data</span>→<span>2 &nbsp; Choose format</span>→<span>3 &nbsp; Copy result</span></div></section>
+<section class="workspace" aria-label="Conversion workspace">
+<div class="editor"><div class="editor-head"><h3>Input</h3><button id="example" class="text-button" type="button">Try an example</button></div><p class="subtitle">Paste values from Excel, SQL results, CSV, or JSON</p><textarea id="input" class="area" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Paste your data here…" aria-label="Input data"></textarea><div class="editor-bottom"><div class="meta"><span id="input-meta">Your data stays in this tab</span><div class="meta-left"><span>Detected:</span><span id="detected">Waiting for input</span><label for="source" class="sr-only">Input interpretation</label><select id="source" class="source-picker" aria-label="Override detected input format"><option value="auto">Auto detect</option><option value="lines">One per line</option><option value="csv">Comma-separated / CSV</option><option value="tsv">Tab-separated / Excel</option><option value="single">SQL quoted list</option><option value="sql">SQL IN clause</option><option value="json">JSON</option></select></div></div><div id="parse-status" class="status" role="status" aria-live="polite"></div></div></div>
+<div class="editor"><div class="editor-head"><h3>Output</h3><button type="button" id="swap" class="text-button" title="Make output the new input">Use as input ↗</button></div><p class="subtitle">Updates automatically · you can make final edits here</p><textarea id="output" class="area output" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Your converted data will appear here…" aria-label="Transformed output"></textarea><div class="editor-bottom"><div class="meta"><span id="count">0 rows</span><div class="actions"><button type="button" class="btn small" id="clear">Clear</button><button type="button" class="btn primary" id="copy">Copy output</button></div></div><div id="copy-status" class="status" role="status" aria-live="polite"></div></div></div>
+</section>
+<section class="lower"><div class="section"><div class="section-top"><div><h3>Choose an output format</h3><p>Only pick the result. We'll interpret your input automatically.</p></div><span class="selected-label">Selected: <strong id="format-current">One per line</strong></span></div><div id="format-groups" class="groups"></div></div>
+<div class="side-content"><section class="section"><h3 class="aside-title">Clean up</h3><p class="aside-descr">Optional changes before formatting</p><label class="control"><input type="checkbox" id="trim" checked> Trim whitespace</label><label class="control"><input type="checkbox" id="blanks" checked> Remove blank rows</label><label class="control"><input type="checkbox" id="dedupe"> Remove duplicates</label><label class="control"><input type="checkbox" id="sort"> Sort ascending</label><label class="control" for="case">Text case <select id="case"><option value="none">Unchanged</option><option value="upper">UPPERCASE</option><option value="lower">lowercase</option><option value="title">Title Case</option></select></label></section>
+<section class="section"><h3 class="aside-title">Format details</h3><p class="aside-descr" id="format-hint">Choose a format; the result updates as you type.</p><div id="table-options" hidden><div class="settings-divider"></div><label class="control"><input type="checkbox" id="headers"> First row contains headers</label><label class="control" for="table-name">SQL table <input id="table-name" type="text" value="MyTable" spellcheck="false" autocomplete="off" aria-label="SQL table name"></label><label class="control" for="dialect">SQL dialect <select id="dialect"><option value="sqlserver">SQL Server</option><option value="snowflake">Snowflake</option><option value="postgres">PostgreSQL</option></select></label><div id="table-help" class="hint" hidden><p>To include column names in SQL, check <b>First row contains headers</b> and paste a table with at least one data row.</p><button type="button" data-example="insert">Load a working INSERT example →</button></div></div><div id="notice" class="message" role="status" aria-live="polite"></div></section></div></section>
+<footer class="fineprint"><p>◈ &nbsp; Built for offline use. No accounts, external dependencies, analytics, or network requests.</p><button type="button" class="text-button" onclick="document.getElementById('help-dialog').showModal()">Privacy &amp; limitations</button></footer>
+</main>
+<dialog class="dialog" id="help-dialog" aria-labelledby="help-title"><div class="dialog-head"><div><h2 id="help-title">How to use this tool</h2><p>A quick guide to common transformations</p></div><button type="button" id="help-close" class="btn small" aria-label="Close help">✕</button></div><div class="dialog-body"><section class="guide-step"><h3>The basics</h3><p>Paste into the left panel. The app detects common list and table formats. Select a format card below the panels, then copy the result. If detection is wrong, use the <b>Auto detect</b> menu beneath the input to override it.</p><div class="example-buttons"><button type="button" data-example="quoted">Remove quotes from a list</button><button type="button" data-example="ids">IDs → SQL IN</button><button type="button" data-example="json">JSON → CSV</button></div></section><section class="guide-step"><h3>SQL INSERT: what should I paste?</h3><p>For a SQL INSERT with column names, paste a <b>table</b> with headers in the first row and data below it. Copy a rectangular selection directly from Excel or query results, including headers.</p><pre>ID    Name    State
+101   Alice   NY
+102   Bob     NJ</pre><p>Select <b>SQL INSERT</b>, check <b>First row contains headers</b>, and enter the destination table name. The tool generates the INSERT statement. If you only have one row of values, leave the header option unchecked.</p><div class="example-buttons"><button type="button" data-example="insert">Load SQL INSERT example</button></div></section><section class="guide-step"><h3>Common pitfalls</h3><p>Commas can be ambiguous: <code>New York, NY</code> might be one value or two. Always review the detected interpretation. Leading-zero IDs are preserved as text by default. SQL INSERT outputs text literals; it does not inspect the destination database schema or infer NULL/numeric types.</p><p>The output panel is editable. Changes to input or transformation settings will regenerate it, replacing manual edits.</p></section><section class="guide-step"><h3>Privacy &amp; offline operation</h3><div class="tip">Everything in this HTML file runs inside your browser. It does not request network resources or send pasted content to a server, and it does not save input or output in browser storage. This is not a guarantee of compliance with your workplace rules: browser extensions, managed-device monitoring, and clipboard history are outside this tool's control. Follow your employer's policies for student, medical, or other sensitive data.</div></section><p class="smallnote">For a longer reference, see <code>docs/USER_GUIDE.md</code> in the repository. The standalone HTML works without that file.</p></div></dialog>
+<script>
+
+    'use strict';
+    (() => {
+      const $ = id => document.getElementById(id);
+      const FORMATS = [
+        {id:'lines',group:'Lists',name:'One per line',example:'Apple ↵ Banana'},
+        {id:'comma',group:'Lists',name:'Comma-separated',example:'Apple, Banana'},
+        {id:'double',group:'Lists',name:'Double-quoted',example:'"Apple", "Banana"'},
+        {id:'single',group:'Lists',name:'Single-quoted',example:"'Apple', 'Banana'"},
+        {id:'tsv',group:'Lists',name:'Tab-separated',example:'Apple ⇥ Banana'},
+        {id:'sqltext',group:'SQL',name:'SQL IN · text',example:"IN ('Apple', 'Banana')"},
+        {id:'sqlnum',group:'SQL',name:'SQL IN · numbers',example:'IN (101, 102)'},
+        {id:'values',group:'SQL',name:'SQL VALUES',example:"('Apple'), ('Banana')"},
+        {id:'insert',group:'SQL',name:'SQL INSERT',example:'INSERT INTO MyTable…'},
+        {id:'json',group:'Structured',name:'JSON array',example:'["Apple","Banana"]'},
+        {id:'objects',group:'Structured',name:'JSON objects',example:'[{"Name":"Apple"}]'},
+        {id:'csv',group:'Structured',name:'CSV table',example:'Name,State ↵ Ana,NY'},
+        {id:'markdown',group:'Structured',name:'Markdown table',example:'| Name | State |'}
+      ];
+      let selected='lines';
+      let edited=false;
+      const input=$('input'), output=$('output');
+      for (const group of ['Lists','SQL','Structured']) {
+        const block=document.createElement('div'), heading=document.createElement('div'), cards=document.createElement('div');
+        heading.className='group-title';heading.textContent=group;cards.className='cards';
+        for(const item of FORMATS.filter(x=>x.group===group)){
+          const button=document.createElement('button');button.type='button';button.className='format';button.dataset.id=item.id;
+          button.setAttribute('aria-pressed',String(item.id===selected));
+          const name=document.createElement('span'),example=document.createElement('span');name.className='name';example.className='example';name.textContent=item.name;example.textContent=item.example;
+          button.append(name,example);button.addEventListener('click',()=>{selected=item.id;document.querySelectorAll('.format').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.id===selected)));updateFormatGuidance();render();});cards.appendChild(button);
+        }
+        block.append(heading,cards);$('format-groups').appendChild(block);
+      }
+      // CSV state-machine parser; handles double-quote escaping and embedded newlines.
+      function parseDelimited(source, delimiter){
+        const rows=[];let row=[],cell='',quoted=false,afterQuote=false,atStart=true;
+        for(let i=0;i<source.length;i++){
+          const c=source[i];
+          if(quoted){
+            if(c==='"'&&source[i+1]==='"'){cell+='"';i++;}
+            else if(c==='"'){quoted=false;afterQuote=true;}
+            else cell+=c;
+          }else if(c===delimiter){row.push(cell);cell='';afterQuote=false;atStart=true;}
+          else if(c==='\n'||c==='\r'){
+            row.push(cell);rows.push(row);row=[];cell='';afterQuote=false;atStart=true;
+            if(c==='\r'&&source[i+1]==='\n')i++;
+          }else if(c==='"' && atStart){quoted=true;atStart=false;}
+          else if(afterQuote){if(!/\s/.test(c))throw Error('Unexpected characters after a closing quote. Check the source format.');}
+          else if(c==='"'){throw Error('Unexpected quote in an unquoted value. Select a different input interpretation if needed.');}
+          else{cell+=c;if(!/\s/.test(c))atStart=false;}
+        }
+        if(quoted)throw Error('Unclosed double quote. Check your pasted text.');
+        if(cell!==''||row.length||afterQuote||source.endsWith(delimiter)){row.push(cell);rows.push(row);}
+        return rows;
+      }
+      function parseSQLTokens(source){
+        const values=[];let i=0;
+        const skip=()=>{while(i<source.length&&/\s/.test(source[i]))i++;};
+        skip();
+        while(i<source.length){
+          let value='';
+          if(source[i]==="'"){
+            i++;let closed=false;
+            while(i<source.length){const c=source[i++];if(c==="'"){if(source[i]==="'"){value+="'";i++;}else{closed=true;break;}}else value+=c;}
+            if(!closed)throw Error('Unclosed SQL single quote.');
+            skip();if(i<source.length&&source[i]!==',')throw Error('Unexpected text after a SQL-quoted value.');
+          }else{
+            while(i<source.length&&source[i]!==',')value+=source[i++];value=value.trim();
+          }
+          values.push(value);
+          if(i<source.length){i++;skip();if(i>=source.length)throw Error('Trailing comma in SQL list.');}
+        }
+        return values;
+      }
+      function fromJSON(s){
+        const parsed=JSON.parse(s);
+        if(!Array.isArray(parsed))throw Error('Expected a JSON array.');
+        if(parsed.every(x=>x!==null&&typeof x==='object'&&!Array.isArray(x))){
+          const keys=[...new Set(parsed.flatMap(x=>Object.keys(x)))];
+          return [keys,...parsed.map(obj=>keys.map(k=>obj[k]===null||obj[k]===undefined?'':String(obj[k])))];
+        }
+        if(parsed.some(x=>x!==null&&typeof x==='object'))throw Error('Nested or mixed JSON objects are not supported.');
+        return parsed.map(x=>[x===null?'':String(x)]);
+      }
+      function detect(s){
+        const t=s.trim();if(!t)return {kind:'lines',label:'—'};
+        if(t.startsWith('[')){try{fromJSON(t);return {kind:'json',label:'JSON array'};}catch{}}
+        if(/^IN\s*\(/i.test(t))return {kind:'sql',label:'SQL IN clause'};
+        if(t.includes('\t'))return {kind:'tsv',label:'Tab-separated / Excel'};
+        if(/^\s*'(?:[^']|'')*'\s*(?:,\s*'(?:[^']|'')*'\s*)+$/s.test(t))return {kind:'single',label:'Single-quoted list'};
+        if(t.includes(',') && (/^\s*"/.test(t)||t.includes('"')))return {kind:'csv',label:'Quoted CSV'};
+        if(t.includes(',') && (!t.includes('\n')||t.split(/\r?\n/).every(line=>line.includes(','))))return {kind:'csv',label:'Comma-separated (check if ambiguous)'};
+        return {kind:'lines',label:'Lines'};
+      }
+      function parse(s,kind){
+        if(!s.trim())return [];
+        if(kind==='json')return fromJSON(s.trim());
+        if(kind==='sql'){
+          const t=s.trim(),m=t.match(/^IN\s*\(([\s\S]*)\)\s*;?$/i);
+          if(!m)throw Error('Expected an SQL IN (...) clause.');return parseSQLTokens(m[1]).map(v=>[v]);
+        }
+        if(kind==='single')return parseSQLTokens(s.trim()).map(v=>[v]);
+        if(kind==='tsv')return parseDelimited(s,'\t');
+        if(kind==='csv')return parseDelimited(s,',');
+        return s.split(/\r\n|\n|\r/).map(x=>[x]);
+      }
+      function clean(rows){
+        let v=rows.map(r=>r.map(cell=>{let text=String(cell);if($('trim').checked)text=text.trim();const mode=$('case').value;if(mode==='upper')text=text.toUpperCase();if(mode==='lower')text=text.toLowerCase();if(mode==='title')text=text.toLowerCase().replace(/\b\p{L}/gu,c=>c.toUpperCase());return text;}));
+        if($('blanks').checked)v=v.filter(r=>r.some(c=>c!==''));
+        if($('dedupe').checked){const seen=new Set();v=v.filter(r=>{const key=JSON.stringify(r);if(seen.has(key))return false;seen.add(key);return true;});}
+        if($('sort').checked)v.sort((a,b)=>a.join('\t').localeCompare(b.join('\t'),undefined,{numeric:false}));
+        return v;
+      }
+      const sqlQuote=s=>"'"+s.replace(/'/g,"''")+"'";
+      const csvQuote=(s,separator=',')=>(s.includes(separator)||/["\r\n]/.test(s)||/^\s|\s$/.test(s))?'"'+s.replace(/"/g,'""')+'"':s;
+      function identifier(s,dialect){
+        const parts=s.split('.').map(p=>p.trim());
+        if(!parts.length||parts.some(p=>!p||!/^[A-Za-z_][A-Za-z0-9_]*$/.test(p)))throw Error('SQL table/column names must use letters, digits and underscores (not starting with a digit). Dots may separate schema/table names.');
+        return parts.map(p=>dialect==='sqlserver'?'['+p+']':'"'+p+'"').join('.');
+      }
+      const isNumber=s=>/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(s);
+      function generate(rows,format){
+        const flat=rows.flat();const width=Math.max(0,...rows.map(r=>r.length));
+        const table=rows.map(r=>Array.from({length:width},(_,i)=>r[i]??''));
+        const d=$('dialect').value;
+        switch(format){
+          case 'lines':return flat.join('\n');
+          case 'comma':return flat.map(s=>csvQuote(s)).join(', ');
+          case 'double':return flat.map(s=>'"'+s.replace(/"/g,'""')+'"').join(', ');
+          case 'single':return flat.map(sqlQuote).join(', ');
+          case 'tsv':return table.map(r=>r.map(s=>csvQuote(s,'\t')).join('\t')).join('\r\n');
+          case 'sqltext':return flat.length?'IN ('+flat.map(sqlQuote).join(', ')+')':'';
+          case 'sqlnum':if(flat.some(x=>!isNumber(x)))throw Error('Numeric SQL output requires every value to be a valid number. Select SQL IN · text to preserve IDs and leading zeros.');return flat.length?'IN ('+flat.join(', ')+')':'';
+          case 'json':return JSON.stringify(flat,null,2);
+          case 'csv':return table.map(r=>r.map(s=>csvQuote(s)).join(',')).join('\r\n');
+          case 'markdown':{
+            if(!table.length)return '';
+            const escape=s=>s.replace(/\|/g,'\\|').replace(/\r?\n/g,' ');
+            const h=$('headers').checked?table[0]:table[0].map((_,i)=>'Column '+(i+1));
+            const data=$('headers').checked?table.slice(1):table;
+            return '| '+h.map(escape).join(' | ')+' |\n| '+h.map(()=>'---').join(' | ')+' |'+(data.length?'\n'+data.map(r=>'| '+r.map(escape).join(' | ')+' |').join('\n'):'');
+          }
+          case 'objects':{
+            if(!table.length)return '[]';
+            const keys=$('headers').checked?table[0]:table[0].map((_,i)=>'column'+(i+1));
+            if(new Set(keys).size!==keys.length||keys.some(x=>!x))throw Error('JSON object headers must be unique and non-empty.');
+            return JSON.stringify(($('headers').checked?table.slice(1):table).map(row=>Object.fromEntries(keys.map((key,i)=>[key,row[i]]))),null,2);
+          }
+          case 'values':return table.map(r=>'('+r.map(sqlQuote).join(', ')+')').join(',\n');
+          case 'insert':{
+            if(!table.length)return '';
+            if(rows.some(r=>r.length!==width))throw Error('Rows have different numbers of columns. Check the input or its detected format.');
+            const tableName=identifier($('table-name').value.trim(),d);
+            const hasHead=$('headers').checked;
+            const columns=hasHead?' ('+table[0].map(c=>identifier(c,d)).join(', ')+')':'';
+            const data=hasHead?table.slice(1):table;
+            if(!data.length)throw Error('No data rows found. Uncheck “First row contains headers” for a single row, or paste a header row followed by data. Try the SQL INSERT example.');
+            if(d==='sqlserver'&&data.length>1000)throw Error('SQL Server supports at most 1,000 row constructors in an INSERT ... VALUES statement. Split the data into batches.');
+            return 'INSERT INTO '+tableName+columns+'\nVALUES\n'+data.map(r=>'  ('+r.map(sqlQuote).join(', ')+')').join(',\n')+';';
+          }
+          default:throw Error('Unsupported output format.');
+        }
+      }
+      function render(){
+        $('copy-status').textContent='';$('notice').textContent='';$('notice').classList.remove('show');
+        $('parse-status').textContent='';$('parse-status').className='status';
+        const detected=detect(input.value);const kind=$('source').value==='auto'?detected.kind:$('source').value;
+        $('detected').textContent=input.value.trim()?($('source').value==='auto'?detected.label:'Override: '+kind):'Waiting for input';
+        try{
+          const rows=clean(parse(input.value,kind));
+          const columns=Math.max(0,...rows.map(r=>r.length));
+          $('count').textContent=rows.length+' row'+(rows.length===1?'':'s')+' · '+columns+' column'+(columns===1?'':'s');
+          $('input-meta').textContent=input.value.trim()?rows.length+' parsed row'+(rows.length===1?'':'s'):'Your data stays in this tab';
+          output.value=generate(rows,selected);edited=false;
+          if($('source').value==='auto'&&detected.label.includes('ambiguous')){
+            $('notice').textContent='Commas can be ambiguous (for example, “New York, NY”). Check the output or change “Interpret as” to Lines.';$('notice').classList.add('show');
+          }
+          if(columns>1&&['lines','comma','double','single','sqltext','sqlnum','json'].includes(selected)){
+            $('notice').textContent='Multiple columns detected: this output format flattens all cells into one list. For structured rows, choose CSV table, JSON objects, SQL VALUES or SQL INSERT.';$('notice').classList.add('show');
+          }
+        }catch(e){output.value='';$('count').textContent='Unable to transform';$('parse-status').textContent=e.message;$('input-meta').textContent='Please review input';$('parse-status').className='status error';edited=false;}
+      }
+      input.addEventListener('input',render);
+      for(const id of ['source','trim','blanks','dedupe','sort','case','headers','table-name','dialect'])$(id).addEventListener(id==='table-name'?'input':'change',render);
+      output.addEventListener('input',()=>{edited=true;$('copy-status').textContent='Manually edited output; settings changes will regenerate it.';});
+      $('clear').addEventListener('click',()=>{input.value='';output.value='';$('source').value='auto';$('copy-status').textContent='';render();input.focus();});
+      function loadExample(type){
+        if(type==='insert'){
+          input.value='ID\tName\tState\n101\tAlice\tNY\n102\tBob\tNJ';
+          selected='insert';$('headers').checked=true;$('table-name').value='Employees';
+        }else if(type==='quoted'){
+          input.value='"Apple", "Banana", "Cherry"';selected='lines';
+        }else if(type==='ids'){
+          input.value='00123\n00456\n00789';selected='sqltext';
+        }else if(type==='json'){
+          input.value='[{"Name":"Alice","State":"NY"},{"Name":"Bob","State":"NJ"}]';selected='csv';$('headers').checked=true;
+        }
+        $('source').value='auto';document.querySelectorAll('.format').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.id===selected)));
+        updateFormatGuidance();render();input.focus();
+      }
+      $('example').addEventListener('click',()=>loadExample(selected==='insert'?'insert':'quoted'));
+      document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>{loadExample(b.dataset.example);const help=$('help-dialog');if(help.open)help.close();}));
+      $('help-open').addEventListener('click',()=>$('help-dialog').showModal());
+      $('help-close').addEventListener('click',()=>$('help-dialog').close());
+      $('help-dialog').addEventListener('click',e=>{if(e.target===$('help-dialog'))$('help-dialog').close();});
+      function updateFormatGuidance(){
+        const f=FORMATS.find(x=>x.id===selected);
+        $('format-current').textContent=f.name;
+        const tabular=['insert','objects','markdown','csv','values'].includes(selected);
+        $('table-options').hidden=!tabular;
+        $('format-hint').textContent= selected==='insert'
+          ? 'Paste tab- or comma-separated rows. Example: ID, Name, State as headers, then one or more data rows. Uncheck headers if your input contains only data.'
+          : selected==='objects'?'Use multiple columns. Check “First row contains headers” to use field names from your data.'
+          : selected==='values'?'Each input row becomes one parenthesized SQL row. Columns are preserved.'
+          : selected==='csv'||selected==='markdown'?'Multiple columns are preserved. For single-column data, the output has one column.'
+          : 'Choose a format; the result updates as you type.';
+        $('table-help').hidden=selected!=='insert';
+      }
+      updateFormatGuidance();
+      $('swap').addEventListener('click',()=>{input.value=output.value;$('source').value='auto';render();input.focus();});
+      $('copy').addEventListener('click',async()=>{
+        if(!output.value){$('copy-status').textContent='Nothing to copy.';return;}
+        try{
+          if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(output.value);}
+          else{
+            output.focus();output.select();if(!document.execCommand('copy'))throw Error('Clipboard write blocked');output.setSelectionRange(output.value.length,output.value.length);
+          }
+          $('copy-status').textContent='Copied to clipboard.';
+        }catch(e){output.focus();output.select();$('copy-status').textContent='Clipboard access blocked. Press Ctrl+C to copy the selected output.';}
+      });
+      render();
+    })();
+  
+</script>
+</body>
+</html>
